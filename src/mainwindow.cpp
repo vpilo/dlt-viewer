@@ -5911,19 +5911,16 @@ void MainWindow::on_filterWidget_itemClicked(QTreeWidgetItem *item, int column)
 {
     on_filterWidget_itemSelectionChanged();
 
-    if(column == 0)
+    FilterItem *tmp = (FilterItem*)item;
+    if(tmp->checkState(0) == Qt::Unchecked)
     {
-        FilterItem *tmp = (FilterItem*)item;
-        if(tmp->checkState(column) == Qt::Unchecked)
-        {
-            tmp->filter.enableFilter = false;
-        }
-        else
-        {
-            tmp->filter.enableFilter = true;
-        }
-        applyConfigEnabled(true);
+        tmp->filter.enableFilter = false;
     }
+    else
+    {
+        tmp->filter.enableFilter = true;
+    }
+    applyConfigEnabled(true);
 }
 
 void MainWindow::iterateDecodersForMsg(QDltMsg &msg, int triggeredByUser)
