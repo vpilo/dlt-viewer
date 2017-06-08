@@ -11,18 +11,20 @@
 
 int main(int argc, char *argv[])
 {
-	int exec;
-
-	QApplication app(argc, argv);
+    QApplication app(argc, argv);
     //! [0]
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
     //redirect debug messages to the MessageWindow dialog
-	qInstallMsgHandler(MessageWindow::AppendMsgWrapper);
+    qInstallMsgHandler(MessageWindow::AppendMsgWrapper);
+#else
+    qInstallMessageHandler(MessageWindow::AppendMsgWrapper);
+#endif
     //! [0]
 
-	MainWindow mainWindow(QLatin1String("QextSerialPort Test Application"));
-	mainWindow.show();
-	exec = app.exec();
-	return exec;
+    MainWindow mainWindow;
+    mainWindow.show();
+
+    return app.exec();
 }
 
 

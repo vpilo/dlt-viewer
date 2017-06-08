@@ -1,9 +1,8 @@
+#include "qextserialport.h"
+#include "qextserialenumerator.h"
 #include "dialog.h"
 #include "ui_dialog.h"
-#include <QtCore/QStringList>
-#include <QtCore/QTimer>
-#include <QtCore/QVariant>
-#include "qextserialport.h"
+#include <QtCore>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -11,43 +10,47 @@ Dialog::Dialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-#ifdef Q_OS_WIN
-    ui->portBox->addItems(QStringList()<<QLatin1String("COM1")<<QLatin1String("COM2")<<QLatin1String("COM3")<<QLatin1String("COM4"));
-#else
-    ui->portBox->addItems(QStringList()<<QLatin1String("/dev/ttyS0")<<QLatin1String("/dev/ttyS1")<<QLatin1String("/dev/ttyUSB0")<<QLatin1String("/dev/ttyUSB1"));
-#endif
+    //! [0]
+    foreach (QextPortInfo info, QextSerialEnumerator::getPorts())
+        ui->portBox->addItem(info.portName);
     //make sure user can input their own port name!
     ui->portBox->setEditable(true);
 
-    ui->baudRateBox->addItem(QLatin1String("1200"), BAUD1200);
-    ui->baudRateBox->addItem(QLatin1String("2400"), BAUD2400);
-    ui->baudRateBox->addItem(QLatin1String("4800"), BAUD4800);
-    ui->baudRateBox->addItem(QLatin1String("9600"), BAUD9600);
-    ui->baudRateBox->addItem(QLatin1String("19200"), BAUD19200);
+    ui->baudRateBox->addItem("1200", BAUD1200);
+    ui->baudRateBox->addItem("2400", BAUD2400);
+    ui->baudRateBox->addItem("4800", BAUD4800);
+    ui->baudRateBox->addItem("9600", BAUD9600);
+    ui->baudRateBox->addItem("19200", BAUD19200);
     ui->baudRateBox->setCurrentIndex(3);
 
-    ui->parityBox->addItem(QLatin1String("NONE"), PAR_NONE);
-    ui->parityBox->addItem(QLatin1String("ODD"), PAR_ODD);
-    ui->parityBox->addItem(QLatin1String("EVEN"), PAR_EVEN);
+    ui->parityBox->addItem("NONE", PAR_NONE);
+    ui->parityBox->addItem("ODD", PAR_ODD);
+    ui->parityBox->addItem("EVEN", PAR_EVEN);
 
-    ui->dataBitsBox->addItem(QLatin1String("5"), DATA_5);
-    ui->dataBitsBox->addItem(QLatin1String("6"), DATA_6);
-    ui->dataBitsBox->addItem(QLatin1String("7"), DATA_7);
-    ui->dataBitsBox->addItem(QLatin1String("8"), DATA_8);
+    ui->dataBitsBox->addItem("5", DATA_5);
+    ui->dataBitsBox->addItem("6", DATA_6);
+    ui->dataBitsBox->addItem("7", DATA_7);
+    ui->dataBitsBox->addItem("8", DATA_8);
     ui->dataBitsBox->setCurrentIndex(3);
 
-    ui->stopBitsBox->addItem(QLatin1String("1"), STOP_1);
-    ui->stopBitsBox->addItem(QLatin1String("2"), STOP_2);
+    ui->stopBitsBox->addItem("1", STOP_1);
+    ui->stopBitsBox->addItem("2", STOP_2);
 
-    ui->queryModeBox->addItem(QLatin1String("Polling"), QextSerialPort::Polling);
-    ui->queryModeBox->addItem(QLatin1String("EventDriven"), QextSerialPort::EventDriven);
+    ui->queryModeBox->addItem("Polling", QextSerialPort::Polling);
+    ui->queryModeBox->addItem("EventDriven", QextSerialPort::EventDriven);
+    //! [0]
 
     ui->led->turnOff();
 
     timer = new QTimer(this);
     timer->setInterval(40);
+    //! [1]
     PortSettings settings = {BAUD9600, DATA_8, PAR_NONE, STOP_1, FLOW_OFF, 10};
     port = new QextSerialPort(ui->portBox->currentText(), settings, QextSerialPort::Polling);
+    //! [1]
+
+    enumerator = new QextSerialEnumerator(this);
+    enumerator->setUpNotifications();
 
     connect(ui->baudRateBox, SIGNAL(currentIndexChanged(int)), SLOT(onBaudRateChanged(int)));
     connect(ui->parityBox, SIGNAL(currentIndexChanged(int)), SLOT(onParityChanged(int)));
@@ -61,7 +64,10 @@ Dialog::Dialog(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), SLOT(onReadyRead()));
     connect(port, SIGNAL(readyRead()), SLOT(onReadyRead()));
 
-    setWindowTitle(QLatin1String("QextSerialPort Demo"));
+    connect(enumerator, SIGNAL(deviceDiscovered(QextPortInfo)), SLOT(onPortAddedOrRemoved()));
+    connect(enumerator, SIGNAL(deviceRemoved(QextPortInfo)), SLOT(onPortAddedOrRemoved()));
+
+    setWindowTitle(tr("QextSerialPort Demo"));
 }
 
 Dialog::~Dialog()
@@ -89,7 +95,7 @@ void Dialog::onPortNameChanged(const QString & /*name*/)
         ui->led->turnOff();
     }
 }
-
+//! [2]
 void Dialog::onBaudRateChanged(int idx)
 {
     port->setBaudRate((BaudRateType)ui->baudRateBox->itemData(idx).toInt());
@@ -119,7 +125,8 @@ void Dialog::onTimeoutChanged(int val)
 {
     port->setTimeout(val);
 }
-
+//! [2]
+//! [3]
 void Dialog::onOpenCloseButtonClicked()
 {
     if (!port->isOpen()) {
@@ -130,17 +137,17 @@ void Dialog::onOpenCloseButtonClicked()
         port->close();
     }
 
-    if (port->isOpen()) {
-        if (port->queryMode() == QextSerialPort::Polling)
-            timer->start();
-        ui->led->turnOn();
-    }
-    else {
+    //If using polling mode, we need a QTimer
+    if (port->isOpen() && port->queryMode() == QextSerialPort::Polling)
+        timer->start();
+    else
         timer->stop();
-        ui->led->turnOff();
-    }
-}
 
+    //update led's status
+    ui->led->turnOn(port->isOpen());
+}
+//! [3]
+//! [4]
 void Dialog::onSendButtonClicked()
 {
     if (port->isOpen() && !ui->sendEdit->toPlainText().isEmpty())
@@ -149,14 +156,24 @@ void Dialog::onSendButtonClicked()
 
 void Dialog::onReadyRead()
 {
-    //EventDriven test.
-    if (qApp->arguments().contains(QLatin1String("--debug")) && port->queryMode()==QextSerialPort::EventDriven){
-        ui->recvEdit->appendPlainText(QString::number(port->bytesAvailable()));
-        return;
-    }
-
     if (port->bytesAvailable()) {
         ui->recvEdit->moveCursor(QTextCursor::End);
         ui->recvEdit->insertPlainText(QString::fromLatin1(port->readAll()));
     }
 }
+
+void Dialog::onPortAddedOrRemoved()
+{
+    QString current = ui->portBox->currentText();
+
+    ui->portBox->blockSignals(true);
+    ui->portBox->clear();
+    foreach (QextPortInfo info, QextSerialEnumerator::getPorts())
+        ui->portBox->addItem(info.portName);
+
+    ui->portBox->setCurrentIndex(ui->portBox->findText(current));
+
+    ui->portBox->blockSignals(false);
+}
+
+//! [4]

@@ -104,12 +104,12 @@ unix:VERSION            = 1.0.0
 CONFIG(debug, debug|release) {
     DESTDIR = ../debug
     TARGET  = qdltd
-    QMAKE_LIBDIR += ../debug
-    LIBS += -lqextserialportd
+    QMAKE_LIBDIR += ../qextserialport/debug ../debug
+    LIBS += -lQt5ExtSerialPortd1
 }
 else {
     DESTDIR = ../release
     TARGET  = qdlt
-    QMAKE_LIBDIR += ../release
-    LIBS += -lqextserialport
+    QMAKE_LIBDIR += ../qextserialport/release ../release
+    LIBS += -lQt5ExtSerialPort1
 }

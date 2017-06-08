@@ -15,15 +15,13 @@ class QAction;
 
 class MainWindow : public QMainWindow
 {
-	Q_OBJECT
+    Q_OBJECT
 
-    //@{
-	QMenu *fileMenu;
+    QMenu *fileMenu;
     QAction *exitAct;
-	QMenu *helpMenu;
+    QMenu *helpMenu;
     QAction *aboutAct;
-    //@}
-	
+
 private:
     void createMenus();
     void createActions();
@@ -32,7 +30,7 @@ private slots:
     void about();
 
 public:
-    MainWindow(const QString &title);
+    MainWindow();
 
 };
 

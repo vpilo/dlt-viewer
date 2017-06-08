@@ -59,11 +59,11 @@ macx:CONFIG -= app_bundle
 # Library definitions for debug and release builds
 CONFIG(debug, debug|release) {
     DESTDIR = ../debug
-    QMAKE_LIBDIR += ../debug
+    QMAKE_LIBDIR += ../qextserialport/debug ../debug
     LIBS += -lqextserialportd -lqdltd
 } else {
     DESTDIR = ../release
-    QMAKE_LIBDIR += ../release
+    QMAKE_LIBDIR += ../qextserialport/release ../release
     LIBS += -lqextserialport -lqdlt
     QMAKE_RPATHDIR += ../build/release
 }
