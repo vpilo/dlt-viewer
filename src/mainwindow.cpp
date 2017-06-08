@@ -5180,10 +5180,11 @@ void MainWindow::on_action_menuPlugin_Edit_triggered() {
             /* update plugin item */
             updatePlugin(item);
             item->savePluginModeToSettings();
-        }
-        if(callInitFile)
-        {
-            applyConfigEnabled(true);
+
+            if(callInitFile)
+            {
+              applyConfigEnabled(true);
+            }
         }
     }
     else
