@@ -23,4 +23,4 @@ add_library(nonverboseplugin MODULE nonverboseplugin.cpp
 
 target_link_libraries(nonverboseplugin qdlt Qt5::Widgets )
 
-install(TARGETS nonverboseplugin DESTINATION deploy/plugins)
+install(TARGETS nonverboseplugin DESTINATION lib/dlt-viewer/plugins)

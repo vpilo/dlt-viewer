@@ -25,4 +25,4 @@ add_library(dummycontrolplugin MODULE dummycontrolplugin.cpp
    ${UI_HEADERS})
 
 target_link_libraries(dummycontrolplugin qdlt Qt5::Widgets )
-install(TARGETS dummycontrolplugin DESTINATION deploy/plugins)
+install(TARGETS dummycontrolplugin DESTINATION lib/dlt-viewer/plugins)

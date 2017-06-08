@@ -23,4 +23,4 @@ add_library(dltsystemviewerplugin MODULE dltsystemviewerplugin.cpp
                           	${UI_HEADERS})
 
 target_link_libraries(dltsystemviewerplugin qdlt Qt5::Widgets )
-install(TARGETS dltsystemviewerplugin DESTINATION deploy/plugins)
+install(TARGETS dltsystemviewerplugin DESTINATION lib/dlt-viewer/plugins)

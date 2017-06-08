@@ -12,6 +12,9 @@
 # List of changes:
 # 01.Oct.2016, Jack Smith <jack.smith@elektrobit.com>, Original Author
 #
+
+add_definitions(-DINSTALLATION_PREFIX="${CMAKE_INSTALL_PREFIX}")
+
 add_library (qdlt dlt_common.c
                   qdltipconnection.cpp
                   qdlttcpconnection.cpp
@@ -37,4 +40,4 @@ target_include_directories (qdlt  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 
 target_link_libraries(qdlt Qt5::Core Qt5::Network)
 
-install(TARGETS qdlt DESTINATION deploy)
+install(TARGETS qdlt DESTINATION lib/dlt-viewer)

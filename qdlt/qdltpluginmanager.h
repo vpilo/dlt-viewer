@@ -33,11 +33,12 @@ public:
     */
     int sizeEnabled() const;
 
-    //! Loads all plugins from three directories.current working sub directory /plugin
+    //! Loads all plugins from allowed plugin directories.
     /*!
-      The three directories:
-      - ./plugin
-      - settingsPluginPath
+      The directories are:
+      - <current working directory>/plugin
+      - settingsPluginPath parameter
+      - <install prefix>/dlt-viewer/plugins
       - /usr/share/dlt-viewer/plugins
       \param settingsPluginPath Full path name.
     */

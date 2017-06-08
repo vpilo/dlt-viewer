@@ -39,6 +39,13 @@ QStringList QDltPluginManager::loadPlugins(const QString &settingsPluginPath)
         errorStrings << loadPluginsPath(pluginsDir);
     }
 
+    /* Load plugins from installation prefix */
+    pluginsDir.setPath(INSTALLATION_PREFIX "/lib/dlt-viewer/plugins");
+    if(pluginsDir.exists() && pluginsDir.isReadable())
+    {
+      errorStrings << loadPluginsPath(pluginsDir);
+    }
+
     /* load plugins form settings path if set */
     if(!settingsPluginPath.isEmpty())
     {

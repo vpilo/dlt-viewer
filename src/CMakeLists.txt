@@ -25,7 +25,7 @@ QT5_WRAP_UI( UI_HEADERS ${ALL_UIS} )
 
 QT5_ADD_RESOURCES(UI_RESOURCES_RCC resource.qrc)
 
-add_executable (dlt-viewer main.cpp
+add_executable (dlt_viewer main.cpp
     mainwindow.cpp
     project.cpp
     ecudialog.cpp
@@ -59,14 +59,15 @@ add_executable (dlt-viewer main.cpp
     resource.qrc
     ${UI_HEADERS}
     ${UI_RESOURCES_RCC})
-message( STATUS "Qt5Widgets_LIBRARIES ${Qt5Widgets_LIBRARIES}")
-target_link_libraries(dlt-viewer  qdlt
+
+target_link_libraries(dlt_viewer  qdlt
                                   qextserialport
                                   ${Qt5Core_LIBRARIES}
                                   ${Qt5Network_LIBRARIES}
                                   ${Qt5Widgets_LIBRARIES}
                                   ${Qt5SerialPort_LIBRARIES})
 
-install(TARGETS dlt-viewer DESTINATION deploy)
-install(DIRECTORY icon png svg DESTINATION deploy
-			PATTERN icon/*.rc EXCLUDE )
+install(TARGETS dlt_viewer DESTINATION bin)
+install(DIRECTORY icon png svg DESTINATION share/dlt-viewer
+        PATTERN icon/*.rc EXCLUDE)
+install(FILES dlt_viewer.desktop DESTINATION share/applications)

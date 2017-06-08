@@ -31,6 +31,7 @@ headers.files = *.h
 
 INSTALLS += headers
 
+DEFINES += INSTALLATION_PREFIX=\\\"$$PREFIX\\\"
 target.path = $$PREFIX/$$[QT_INSTALL_LIBS]
 INSTALLS += target
 
@@ -104,12 +105,12 @@ unix:VERSION            = 1.0.0
 CONFIG(debug, debug|release) {
     DESTDIR = ../debug
     TARGET  = qdltd
-    QMAKE_LIBDIR += ../qextserialport/debug ../debug
-    LIBS += -lQt5ExtSerialPortd1
+    QMAKE_LIBDIR += ../qextserialport ../qextserialport/debug ../debug
+    LIBS += -lQt5ExtSerialPortd
 }
 else {
     DESTDIR = ../release
     TARGET  = qdlt
-    QMAKE_LIBDIR += ../qextserialport/release ../release
-    LIBS += -lQt5ExtSerialPort1
+    QMAKE_LIBDIR += ../qextserialport ../qextserialport/release ../release
+    LIBS += -lQt5ExtSerialPort
 }
