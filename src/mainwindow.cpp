@@ -6028,7 +6028,9 @@ bool MainWindow::jump_to_line(int line)
     if (0 > row)
         return false;
 
+    ui->tableView->setFocus();
     ui->tableView->selectionModel()->clear();
+    ui->tableView->selectRow( row );
 
     // maybe a more elegant way exists... anyway this works
     if(project.settings->showIndex == 1)
@@ -6054,8 +6056,6 @@ bool MainWindow::jump_to_line(int line)
 
     QModelIndex idx = tableModel->index(row, column, QModelIndex());
     ui->tableView->scrollTo(idx, QAbstractItemView::PositionAtTop);
-    ui->tableView->selectionModel()->select(idx, QItemSelectionModel::Select|QItemSelectionModel::Rows);
-    ui->tableView->setFocus();
 
     return true;
 }
