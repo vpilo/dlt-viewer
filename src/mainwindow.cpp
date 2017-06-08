@@ -1873,13 +1873,6 @@ bool MainWindow::openDlpFile(QString fileName)
 
 void MainWindow::on_action_menuProject_Save_triggered()
 {
-
-    if( true == project.Save() )
-    {
-        return;
-    }
-
-
     QFileDialog dialog(this);
     QStringList filters;
     filters << "DLT Project Files (*.dlp)" <<"All files (*.*)";
