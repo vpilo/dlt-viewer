@@ -290,6 +290,7 @@ void MainWindow::initView()
     ui->configWidget->setHeaderHidden(false);
     ui->filterWidget->setHeaderHidden(false);
     ui->pluginWidget->setHeaderHidden(false);
+    ui->filterWidget->resizeColumnToContents( 0 );
 
     /* Start pulsing the apply changes button, when filters draged&dropped */
     connect(ui->filterWidget, SIGNAL(filterItemDropped()), this, SLOT(filterOrderChanged()));
@@ -1872,6 +1873,12 @@ bool MainWindow::openDlpFile(QString fileName)
 
 void MainWindow::on_action_menuProject_Save_triggered()
 {
+
+    if( true == project.Save() )
+    {
+        return;
+    }
+
 
     QFileDialog dialog(this);
     QStringList filters;
@@ -5278,6 +5285,28 @@ void MainWindow::on_action_menuPlugin_Disable_triggered()
 //----------------------------------------------------------------------------
 // Filter functionalities
 //----------------------------------------------------------------------------
+
+void MainWindow::on_action_filterGroupSelect_linkActivated( const QString& link )
+{
+    bool newState;
+
+    if( link == "#all" )
+    {
+        newState = true;
+    }
+    else
+    {
+        newState = false;
+    }
+
+    /* iterate through all filters */
+    for(int num = 0; num < project.filter->topLevelItemCount(); num++)
+    {
+        QTreeWidgetItem* item = project.filter->topLevelItem(num);
+        item->setCheckState( 0, newState ? Qt::Checked : Qt::Unchecked );
+        on_filterWidget_itemClicked( item, 0 );
+    }
+}
 
 void MainWindow::filterAddTable() {
     QModelIndexList list = ui->tableView->selectionModel()->selection().indexes();

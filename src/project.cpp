@@ -449,7 +449,7 @@ void FilterItem::update()
     if(filter.isMarker())
     {
         QColor color(filter.filterColour);
-        text += color.name();
+        text += color.name().toUpper();
 
         setBackground(0,color);
         setBackground(1,color);

@@ -455,6 +455,8 @@ private slots:
     void action_menuPlugin_Enable_triggered();
     void on_action_menuPlugin_Disable_triggered();
 
+    void on_action_filterGroupSelect_linkActivated(const QString& link);
+
     //Rename
     void filterAdd();
     void filterAddTable();

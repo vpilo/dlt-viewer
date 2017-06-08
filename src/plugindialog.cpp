@@ -83,7 +83,7 @@ void PluginDialog::on_toolButton_clicked() {
         fileName = QFileDialog::getOpenFileName(this,
             QString("Open ")+name+QString(" configuration file"),
             workingDirectory.getPluginDirectory(name),
-            tr("Plugin configuration (*.*)"));
+            tr("XML plugin configuration (*.xml);;Plugin configuration (*.*)"));
     }
     else
     {
