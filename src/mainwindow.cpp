@@ -5732,7 +5732,7 @@ void MainWindow::on_action_menuConfig_SearchTable_Copy_to_clipboard_triggered()
 
 void MainWindow::keyPressEvent ( QKeyEvent * event )
 {
-    if(event->matches(QKeySequence::Copy))
+    if(event->matches(QKeySequence::Copy)||event->matches(QKeySequence::Cut))
     {
         if(ui->tableView->hasFocus())
         {
@@ -5747,11 +5747,6 @@ void MainWindow::keyPressEvent ( QKeyEvent * event )
     if(event->matches(QKeySequence::Paste))
     {
         QMessageBox::warning(this, QString("Paste"),
-                             QString("pressed"));
-    }
-    if(event->matches(QKeySequence::Cut))
-    {
-        QMessageBox::warning(this, QString("Cut"),
                              QString("pressed"));
     }
 
