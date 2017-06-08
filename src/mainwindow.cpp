@@ -698,6 +698,8 @@ void MainWindow::deleteactualFile(){
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    /* Save current project, if any */
+    project.Save();
 
     settings->writeSettings(this);
     if(true == isSearchOngoing)

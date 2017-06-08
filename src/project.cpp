@@ -1007,6 +1007,8 @@ bool Project::Load(QString filename)
                              xml.errorString());
     }
 
+    m_filename = filename;
+
     file.close();
 
     return true;
@@ -1014,6 +1016,14 @@ bool Project::Load(QString filename)
 
 bool Project::Save(QString filename)
 {
+    if( filename.isEmpty() )
+    {
+        if( m_filename.isEmpty() )
+            return false;
+        else
+            filename = m_filename;
+    }
+
     QFile file(filename);
     if (!file.open(QFile::WriteOnly | QFile::Truncate | QFile::Text))
     {

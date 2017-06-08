@@ -280,7 +280,7 @@ public:
     ~Project();
 
     bool Load(QString filename);
-    bool Save(QString filename);
+    bool Save(QString filename = QString());
     void Clear();
 
     bool SaveFilter(QString filename);
@@ -290,6 +290,7 @@ public:
     QTreeWidget *filter;
     QTreeWidget *plugin;
     SettingsDialog *settings;
+    QString m_filename;
 
 private:
 
