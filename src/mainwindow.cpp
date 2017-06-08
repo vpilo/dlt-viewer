@@ -6384,7 +6384,11 @@ void MainWindow::on_actionDefault_Filter_Reload_triggered()
     /* default filter list update combobox */
     QDltFilterList *filterList;
     foreach(filterList,defaultFilter.defaultFilterList)
-        ui->comboBoxFilterSelection->addItem(filterList->getFilename());
+    {
+      QString fileName( filterList->getFilename() );
+      /* Remove paths from names */
+      ui->comboBoxFilterSelection->addItem( fileName.mid( fileName.lastIndexOf( '/' ) + 1 ) );
+    }
 
 }
 
