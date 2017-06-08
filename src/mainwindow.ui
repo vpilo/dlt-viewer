@@ -454,7 +454,13 @@
            <property name="rootIsDecorated">
             <bool>true</bool>
            </property>
+           <property name="uniformRowHeights">
+            <bool>true</bool>
+           </property>
            <property name="animated">
+            <bool>true</bool>
+           </property>
+           <property name="allColumnsShowFocus">
             <bool>true</bool>
            </property>
            <property name="headerHidden">
@@ -466,9 +472,28 @@
            <attribute name="headerVisible">
             <bool>false</bool>
            </attribute>
+           <attribute name="headerCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="headerDefaultSectionSize">
+            <number>40</number>
+           </attribute>
+           <attribute name="headerMinimumSectionSize">
+            <number>20</number>
+           </attribute>
            <column>
             <property name="text">
              <string notr="true">Id</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Status</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Location</string>
             </property>
            </column>
            <column>
@@ -1622,54 +1647,6 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>configWidget</sender>
-   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
-   <receiver>action_menuConfig_ECU_Edit</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>133</x>
-     <y>220</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>configWidget</sender>
-   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
-   <receiver>action_menuConfig_Application_Edit</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>133</x>
-     <y>220</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>configWidget</sender>
-   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
-   <receiver>action_menuConfig_Context_Edit</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>133</x>
-     <y>220</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionNewDltFile</sender>
    <signal>triggered()</signal>
    <receiver>action_menuFile_New</receiver>
@@ -1838,6 +1815,54 @@ p, li { white-space: pre-wrap; }
     <hint type="sourcelabel">
      <x>134</x>
      <y>229</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>configWidget</sender>
+   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>action_menuConfig_ECU_Edit</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>133</x>
+     <y>220</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>configWidget</sender>
+   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>action_menuConfig_Context_Edit</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>133</x>
+     <y>220</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>configWidget</sender>
+   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>action_menuConfig_Application_Edit</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>133</x>
+     <y>220</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>

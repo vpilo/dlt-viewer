@@ -2708,6 +2708,7 @@ void MainWindow::disconnectECU(EcuItem *ecuitem)
         ecuitem->InvalidAll();
     }
     checkConnectionState();
+    updatePluginsECUList();
 }
 
 void MainWindow::on_action_menuConfig_Connect_triggered()
@@ -2829,6 +2830,7 @@ void MainWindow::connectECU(EcuItem* ecuitem,bool force)
         }
     }
     checkConnectionState();
+    updatePluginsECUList();
 }
 
 void MainWindow::connected()
@@ -2855,6 +2857,7 @@ void MainWindow::connected()
         }
     }
 checkConnectionState();
+    updatePluginsECUList();
 }
 void MainWindow::checkConnectionState()
 {
@@ -2911,6 +2914,7 @@ void MainWindow::disconnected()
         }
     }
       checkConnectionState();
+    updatePluginsECUList();
 }
 
 
@@ -2971,6 +2975,7 @@ void MainWindow::error(QAbstractSocket::SocketError /* socketError */)
         }
 
     }
+    updatePluginsECUList();
 }
 
 void MainWindow::readyRead()
@@ -3437,6 +3442,7 @@ void MainWindow::controlMessage_ReceiveControlMessage(EcuItem *ecuitem, QDltMsg 
         }
         /* update status */
         ecuitem->update();
+        updatePluginsECUList();
 
         break;
     }
@@ -3711,6 +3717,7 @@ void MainWindow::on_action_menuDLT_Set_Default_Log_Level_triggered()
         /* update status */
         ecuitem->status = EcuItem::valid;
         ecuitem->update();
+        updatePluginsECUList();
     }
     else
         QMessageBox::warning(0, QString("DLT Viewer"),
@@ -4840,6 +4847,7 @@ void MainWindow::sendUpdates(EcuItem* ecuitem)
     /* update status */
     ecuitem->status = EcuItem::valid;
     ecuitem->update();
+    updatePluginsECUList();
 
 }
 
@@ -4875,6 +4883,7 @@ void MainWindow::stateChangedSerial(bool dsrChanged){
 
         }
     }
+    updatePluginsECUList();
 }
 
 void MainWindow::stateChangedTCP(QAbstractSocket::SocketState socketState)
@@ -4918,6 +4927,7 @@ void MainWindow::stateChangedTCP(QAbstractSocket::SocketState socketState)
             }
         }
     }
+    updatePluginsECUList();
 }
 
 //----------------------------------------------------------------------------
@@ -5001,6 +5011,9 @@ void MainWindow::updatePluginsECUList()
         list.append(ecuitem->id + " (" + ecuitem->description + ")");
     }
     pluginManager.initConnections(list);
+
+    for( int i = 0; i<project.ecu->columnCount();i++)
+        project.ecu->resizeColumnToContents(i);
 }
 
 void MainWindow::updatePlugins() {

@@ -21,6 +21,7 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QMessageBox>
+#include <QBrush>
 #include <QHeaderView>
 
 #include "project.h"
@@ -80,65 +81,75 @@ EcuItem::~EcuItem()
 
 void EcuItem::update()
 {
+    Qt::GlobalColor bkColor = Qt::white;
+    setData(0, Qt::DisplayRole, id);
+    setData(3, Qt::DisplayRole, description);
+
     if(tryToConnect & connected)
     {
-        setData(0,Qt::DisplayRole,id + " online");
-        setBackground(0,QBrush(QColor(Qt::green)));
+        setData(1, Qt::DisplayRole, "Online");
+        bkColor = Qt::green;
     }
     else if(tryToConnect & !connected)
     {
         if(connectError.isEmpty())
         {
-            setData(0,Qt::DisplayRole,id + " connect");
-            setBackground(0,QBrush(QColor(Qt::yellow)));
+            setData(1, Qt::DisplayRole, "Connecting");
+            bkColor = Qt::yellow;
         }
         else
         {
-            setData(0,Qt::DisplayRole,id + " connect ["+connectError+"]");
-            setBackground(0,QBrush(QColor(Qt::red)));
+            setData(1, Qt::DisplayRole, QString("Error: %1").arg(connectError));
+            bkColor = Qt::red;
         }
 
     }
     else
     {
-        setData(0,Qt::DisplayRole,id + " offline");
-        setBackground(0,QBrush(QColor(Qt::white)));
+        setData(1,Qt::DisplayRole, "Offline");
     }
 
     switch(interfacetype)
     {
         case EcuItem::INTERFACETYPE_TCP:
-            setData(1,Qt::DisplayRole,QString("%1 [%2:%3]").arg(description).arg(hostname).arg(ipport));
+            setData(2, Qt::DisplayRole, QString("%1:%2 TCP").arg(hostname).arg(ipport));
             socket = & tcpsocket;
             break;
         case EcuItem::INTERFACETYPE_UDP:
-            setData(1,Qt::DisplayRole,QString("%1 [%2:%3]").arg(description).arg(hostname).arg(ipport));
+            setData(2, Qt::DisplayRole, QString("%1:%2 UDP").arg(hostname).arg(ipport));
             socket = & udpsocket;
             break;
         case EcuItem::INTERFACETYPE_SERIAL:
-            setData(1,Qt::DisplayRole,QString("%1 [%2]").arg(description).arg(port));
+            setData(2,Qt::DisplayRole,QString("%2").arg(port));
             socket = 0;
             break;
     }
 
-    setData(2,Qt::DisplayRole,QString("Default: %1").arg(loginfo[loglevel+1]));
-    setData(3,Qt::DisplayRole,QString("Default: %1").arg(traceinfo[tracestatus+1]));
+    setData(4,Qt::DisplayRole,loginfo[loglevel+1]);
+    setData(5,Qt::DisplayRole,traceinfo[tracestatus+1]);
 
     if(status == EcuItem::invalid)
     {
-        setBackground(2,QBrush(QColor(Qt::red)));
-        setBackground(3,QBrush(QColor(Qt::red)));
+        bkColor = Qt::red;
     }
     else if(status == EcuItem::unknown)
     {
-        setBackground(2,QBrush(QColor(Qt::yellow)));
-        setBackground(3,QBrush(QColor(Qt::yellow)));
+        bkColor = Qt::yellow;
     }
     else if(status == EcuItem::valid)
     {
-        setBackground(2,QBrush(QColor(Qt::green)));
-        setBackground(3,QBrush(QColor(Qt::green)));
+        bkColor = Qt::green;
     }
+
+    QColor color = QColor( bkColor );
+    color.setAlpha(100);
+    QBrush bkBrush = color;
+    setBackground(0,bkBrush);
+    setBackground(1,bkBrush);
+    setBackground(2,bkBrush);
+    setBackground(3,bkBrush);
+    setBackground(4,bkBrush);
+    setBackground(5,bkBrush);
 }
 
 void EcuItem::InvalidAll()
