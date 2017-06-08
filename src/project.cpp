@@ -339,24 +339,24 @@ void FilterItem:: operator = (FilterItem &item)
 
 void FilterItem::update()
 {
-    QString text;
+    QStringList text;
 
     switch(filter.type)
     {
     case QDltFilter::positive:
         if(filter.isMarker())
-            text += QString("POSITIVE MARKER ");
+            text += QString("+ Mark");
         else
-            text += QString("POSITIVE ");
+            text += QString("+");
         break;
     case QDltFilter::negative:
         if(filter.isMarker())
-            text += QString("NEGATIVE MARKER ");
+            text += QString("- Mark");
         else
-            text += QString("NEGATIVE ");
+            text += QString("-");
         break;
     case QDltFilter::marker:
-        text += QString("MARKER ");
+        text += QString("Mark");
         break;
     }
 
@@ -371,22 +371,22 @@ void FilterItem::update()
     }
 
     if(filter.enableEcuid ) {
-        text += QString("%1 ").arg(filter.ecuid);
+        text += QString("%1").arg(filter.ecuid);
     }
     if(filter.enableApid ) {
-        text += QString("%1 ").arg(filter.apid);
+        text += QString("%1").arg(filter.apid);
     }
     if(filter.enableCtid ) {
-        text += QString("%1 ").arg(filter.ctid);
+        text += QString("%1").arg(filter.ctid);
     }
     if(filter.enableHeader ) {
-        text += QString("%1 ").arg(filter.header);
+        text += QString("%1").arg(filter.header);
     }
     if(filter.enablePayload ) {
-        text += QString("%1 ").arg(filter.payload);
+        text += QString("%1").arg(filter.payload);
     }
     if(filter.enableCtrlMsgs ) {
-        text += QString("CtrlMsgs ");
+        text += QString("CtrlMsgs");
     }
     if(filter.enableLogLevelMax ) {
         switch(filter.logLevelMax)
@@ -415,7 +415,9 @@ void FilterItem::update()
         default:
             break;
         }
-        text += " ";
+    }
+    if(filter.enableLogLevelMax && filter.enableLogLevelMin) {
+        text += "->";
     }
     if(filter.enableLogLevelMin ) {
         switch(filter.logLevelMin)
@@ -444,12 +446,10 @@ void FilterItem::update()
         default:
             break;
         }
-        text += " ";
     }
     if(filter.isMarker())
     {
         QColor color(filter.filterColour);
-        text += color.name().toUpper();
 
         setBackground(0,color);
         setBackground(1,color);
@@ -457,11 +457,11 @@ void FilterItem::update()
         setForeground(1,DltUiUtils::optimalTextColor(color));
     }
 
-    if(text.isEmpty()) {
-        text = QString("all");
+    if(text.empty()) {
+        text += QString("all");
     }
 
-    setData(1,0,QString("%1 (%2)").arg(filter.name).arg(text));
+    setData(1,0,QString("%1 (%2)").arg(filter.name).arg(text.join(" ")));
 }
 
 
