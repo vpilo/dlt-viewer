@@ -429,12 +429,6 @@ bool NonverbosePlugin::parseFile(QString filename)
 
     file.close();
 
-    if (warning_text.length()){
-        warning_text.chop(2); // remove last ", "
-        m_error_string.append("Duplicated FRAMES ignored: \n").append(warning_text);
-        ret = true;//it is not breaking the plugin functionality, but could cause wrong decoding.
-    }
-
     /* create PDU Ref links */
     foreach(DltFibexFrame *frame, framemap)
     {
