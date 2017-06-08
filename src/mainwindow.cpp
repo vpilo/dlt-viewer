@@ -1980,7 +1980,7 @@ void MainWindow::on_action_menuConfig_ECU_Edit_triggered()
 
         /* Read settings for recent hostnames and ports */
         recentHostnames = DltSettingsManager::getInstance()->value("other/recentHostnameList",hostnameListPreset).toStringList();
-        recentPorts = DltSettingsManager::getInstance()->value("other/recentPortList",portListPreset).toStringList();
+        recentPorts = DltSettingsManager::getInstance()->value("other/recentPortList",QStringList()).toStringList();
 
         setCurrentHostname(ecuitem->getHostname());
 
@@ -1988,7 +1988,7 @@ void MainWindow::on_action_menuConfig_ECU_Edit_triggered()
         setCurrentPort(ecuitem->getPort());
 
         dlg.setHostnameList(recentHostnames);
-        dlg.setPortList(recentPorts);
+        dlg.setPortList(portListPreset+recentPorts);
 
         if(dlg.exec())
         {

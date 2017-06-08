@@ -262,7 +262,6 @@ QStringList EcuDialog::getPortList()
 {
     QStringList ports;
 
-    ports.clear();
     for (int i = 0; i < ui->comboBoxPort->count(); ++i)
     {
         ports.append(ui->comboBoxPort->itemText(i));
@@ -272,6 +271,8 @@ QStringList EcuDialog::getPortList()
 
 void EcuDialog::setPortList(QStringList ports)
 {
+    ports.removeDuplicates();
+
     ui->comboBoxPort->clear();
     ui->comboBoxPort->addItems(ports);
 }
