@@ -1331,6 +1331,13 @@ void MainWindow::on_action_menuFile_Clear_triggered()
     // clear the cache stored for the history
     searchDlg->clearCacheHistory();
 
+    totalByteErrorsRcvd = 0;
+    totalBytesRcvd = 0;
+    totalSyncFoundRcvd = 0;
+    statusByteErrorsReceived->setText(QString("Recv Errors: 0"));
+    statusBytesReceived->setText(QString("Recv: 0"));
+    statusSyncFoundReceived->setText(QString("Sync found: 0"));
+
     QString oldfn = outputfile.fileName();
 
     if(outputfile.isOpen())
