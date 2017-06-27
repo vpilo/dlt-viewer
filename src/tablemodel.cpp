@@ -363,25 +363,25 @@ QColor TableModel::searchBackgroundColor() const
 
 void HtmlDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QStyleOptionViewItemV4 optionV4 = option;
-    initStyleOption(&optionV4, index);
+    QStyleOptionViewItem customOption = option;
+    initStyleOption(&customOption, index);
 
-    QStyle *style = optionV4.widget? optionV4.widget->style() : QApplication::style();
+    QStyle *style = customOption.widget? customOption.widget->style() : QApplication::style();
 
     QTextDocument doc;
-    doc.setHtml(optionV4.text);
+    doc.setHtml(customOption.text);
 
     /// Painting item without text
-    optionV4.text = QString();
-    style->drawControl(QStyle::CE_ItemViewItem, &optionV4, painter);
+    customOption.text = QString();
+    style->drawControl(QStyle::CE_ItemViewItem, &customOption, painter);
 
     QAbstractTextDocumentLayout::PaintContext ctx;
 
     // Highlighting text if item is selected
-    if (optionV4.state & QStyle::State_Selected)
-        ctx.palette.setColor(QPalette::Text, optionV4.palette.color(QPalette::Active, QPalette::HighlightedText));
+    if (customOption.state & QStyle::State_Selected)
+        ctx.palette.setColor(QPalette::Text, customOption.palette.color(QPalette::Active, QPalette::HighlightedText));
 
-    QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &optionV4);
+    QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &customOption);
     painter->save();
     painter->translate(textRect.topLeft());
     painter->setClipRect(textRect.translated(-textRect.topLeft()));
@@ -392,11 +392,11 @@ void HtmlDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 
 QSize HtmlDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QStyleOptionViewItemV4 optionV4 = option;
-    initStyleOption(&optionV4, index);
+    QStyleOptionViewItem customOption = option;
+    initStyleOption(&customOption, index);
 
     QTextDocument doc;
-    doc.setHtml(optionV4.text);
-    doc.setTextWidth(optionV4.rect.width());
+    doc.setHtml(customOption.text);
+    doc.setTextWidth(customOption.rect.width());
     return QSize(doc.idealWidth(), doc.size().height());
 }
