@@ -48,6 +48,9 @@ char buffer[DLT_VIEWER_LIST_BUFFER_SIZE];
 
  int TableModel::columnCount(const QModelIndex & /*parent*/) const
  {
+   if(project == NULL || project->settings == NULL)
+     return DLT_VIEWER_COLUMN_COUNT;
+
      return DLT_VIEWER_COLUMN_COUNT+project->settings->showArguments;
  }
 
@@ -57,6 +60,9 @@ char buffer[DLT_VIEWER_LIST_BUFFER_SIZE];
      QByteArray buf;
 
      if (!index.isValid())
+         return QVariant();
+
+     if (qfile == NULL || project == NULL || project->settings == NULL)
          return QVariant();
 
      if (index.row() >= qfile->sizeFilter() && index.row()<0)
@@ -90,7 +96,7 @@ char buffer[DLT_VIEWER_LIST_BUFFER_SIZE];
          {
          case FieldNames::Index:
              /* display index */
-             return QString("%1").arg(qfile->getMsgFilterPos(index.row()));
+             return qfile->getMsgFilterPos(index.row());
          case FieldNames::Time:
              if( project->settings->automaticTimeSettings == 0 )
                 return QString("%1.%2").arg(msg.getGmTimeWithOffsetString(project->settings->utcOffset,project->settings->dst)).arg(msg.getMicroseconds(),6,10,QLatin1Char('0'));
@@ -99,7 +105,7 @@ char buffer[DLT_VIEWER_LIST_BUFFER_SIZE];
          case FieldNames::TimeStamp:
              return QString("%1.%2").arg(msg.getTimestamp()/10000).arg(msg.getTimestamp()%10000,4,10,QLatin1Char('0'));
          case FieldNames::Counter:
-             return QString("%1").arg(msg.getMessageCounter());
+             return msg.getMessageCounter();
          case FieldNames::EcuId:
              return msg.getEcuid();
          case FieldNames::AppId:
@@ -176,7 +182,7 @@ char buffer[DLT_VIEWER_LIST_BUFFER_SIZE];
          case FieldNames::Mode:
              return msg.getModeString();
          case FieldNames::ArgCount:
-             return QString("%1").arg(msg.getNumberOfArguments());
+             return msg.getNumberOfArguments();
          case FieldNames::Payload:
              if(loggingOnlyMode)
                  return QString("Logging only Mode! Disable in Project Settings!");
@@ -314,6 +320,9 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation,
         switch (role)
         {
         case Qt::DisplayRole:
+            if (project == NULL)
+              return QVariant();
+
             return FieldNames::getName((FieldNames::Fields)section, project->settings);
         case Qt::TextAlignmentRole:
             return (section == FieldNames::Payload) ? Qt::AlignLeft : QVariant();
@@ -331,13 +340,17 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation,
          return 0;
      else if(loggingOnlyMode)
          return 1;
+     else if (qfile == NULL)
+         return 0;
      else
          return qfile->sizeFilter();
  }
 
  void TableModel::modelChanged()
  {
-     if(emptyForceFlag)
+     emit layoutAboutToBeChanged();
+
+     if(emptyForceFlag && qfile != NULL)
      {
          index(0, 1);
          index(qfile->sizeFilter()-1, 0);
@@ -348,7 +361,8 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation,
          index(0, 0);
          index(0, columnCount() - 1);
      }
-     emit(layoutChanged());
+
+     emit layoutChanged();
  }
 
 
