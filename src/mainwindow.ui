@@ -1367,6 +1367,9 @@ p, li { white-space: pre-wrap; }
    <property name="toolTip">
     <string>Scroll automatically to the end of the log, when receiving data.</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
   <action name="actionFind">
    <property name="icon">
